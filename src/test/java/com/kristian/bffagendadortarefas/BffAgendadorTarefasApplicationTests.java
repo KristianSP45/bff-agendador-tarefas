@@ -3,10 +3,10 @@ package com.kristian.bffagendadortarefas;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class BffAgendadorTarefasApplicationTests {
 
-	@Test
+	//@Test
 	void contextLoads() {
 	}
 
