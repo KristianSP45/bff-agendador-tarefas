@@ -2,12 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<!-- <parent> = define versões padrão, configura plugins e evita você ter que versionar tudo na mão -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.9</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	<!-- Identidade do projeto -->
 	<groupId>com.kristian</groupId>
 	<artifactId>bff-agendador-tarefas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -39,6 +41,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
+		<!-- @FeignClient, comunicação entre microserviços, repasse de token, tratamento de erro (FeignError) -->
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -50,6 +53,22 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.8.8</version>
+		</dependency>
+		<!-- Responsável por: Swagger UI, @Operation, @ApiResponse, @SecurityScheme -->
+
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-hc5</artifactId>
+			<version>13.3</version>
+		</dependency>
+		<!-- Cliente HTTP usado pelo Feign. Substitui o client padrão por Apache HttpClient 5,
+     	oferecendo melhor performance e controle em produção. -->
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -60,6 +79,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<!-- garante compatibilidade Feign ↔ Spring Boot, centraliza dependências cloud -->
 		</dependencies>
 	</dependencyManagement>
 
@@ -73,6 +93,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<!-- Garante que Lombok funcione em build CI/CD. -->
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
