@@ -7,8 +7,8 @@ import com.kristian.bffagendadortarefas.infractructure.exceptions.UnauthorizedEx
 import feign.Response;
 import feign.codec.ErrorDecoder;
 
-public class FeignError implements ErrorDecoder {
-
+public class FeignError implements ErrorDecoder {//implements ErrorDecoder = “Sempre que o Feign receber um erro HTTP, passa por mim”
+//tratamento + tradução + padronização
     @Override
     public Exception decode(String s, Response response) {
         switch (response.status()){
@@ -23,3 +23,12 @@ public class FeignError implements ErrorDecoder {
         }
     }
 }
+//Parâmetros:
+//String s:
+//nome do método Feign que falhou
+//ex: TarefasClient#gravarTarefas
+//você não usou, mas poderia (logs)
+
+//Response response:
+//resposta HTTP real
+//status, headers, body

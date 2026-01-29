@@ -20,17 +20,21 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tarefas")
-@Tag(name = "Tarefas", description = "Cadastra tarefas de usuários")
-@SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
+@Tag(name = "Tarefas", description = "Cadastra tarefas de usuários")// Agrupa os endpoints de tarefas no Swagger, modo de organização
+@SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)//“Este controller usa o esquema de segurança definido em SecurityConfig”
+// Indica ao Swagger que este controller exige autenticação (documentação apenas)
 public class TarefasController {
     private final TarefasService tarefasService;
 
     @PostMapping
-    @Operation(summary = "Salvar Tarefas de Usuário", description = "Cria um nova tarefa")
-    @ApiResponse(responseCode = "200", description = "Tarefa salvo com sucesso")
+    @Operation(summary = "Salvar Tarefas de Usuário", description = "Cria um nova tarefa")//Documentação = summary > título curto / description > explicação detalhada
+    @ApiResponse(responseCode = "200", description = "Tarefa salvo com sucesso")//Documentação = ApiResponse > possíveis retornos HTTP
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     public ResponseEntity<TarefasDTOResponse> gravarTarefas(@RequestBody TarefasDTORequest dto,
                                                             @RequestHeader(value = "Authorization", required = false) String token){
+        // Header Authorization opcional para permitir validação manual no service
+        // required = true (padrão): Spring bloqueia antes do método
+        // required = false: Método é executado, token pode ser null e Service decide o que fazer
         return  ResponseEntity.ok(tarefasService.gravarTarefa(token, dto));
     }
 
@@ -41,7 +45,7 @@ public class TarefasController {
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     @ApiResponse(responseCode = "401", description = "Usuário não autorizado")
     public ResponseEntity<List<TarefasDTOResponse>> buscaListaTarefasPorPeriodo(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,// Define o formato ISO para conversão de String para LocalDateTime,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFinal,
             @RequestHeader(value = "Authorization", required = false) String token){
         return  ResponseEntity.ok(tarefasService.buscaTarefasAgendadasPorPeriodo(dataInicial, dataFinal, token));
