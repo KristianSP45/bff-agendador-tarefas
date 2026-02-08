@@ -1,0 +1,138 @@
+version: "3.8"
+
+services:
+  agendador-tarefas:
+    build: ../agendador-tarefas
+    container_name: agendador-tarefas
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATA_MONGODB_URL=mongodb://mongo:27017/db_agendador
+    depends_on:
+      - mongo
+
+  bff-agendador-tarefas:
+    build: .
+    container_name: bff-agendador-tarefas
+    ports:
+      - "8083:8083"
+    environment:
+      - USUARIO_URL=http://usuario:8080/usuario
+      - AGENDADOR_TAREFAS_URL=http://agendador-tarefas:8081/tarefas
+      - NOTIFICACAO_URL=http://notificacao:8082/email
+
+  usuario:
+    build: ../usuario
+    container_name: usuario
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/db_at_usuario
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+    depends_on:
+      - postgres
+
+  notificacao:
+    build: ../notificacao
+    container_name: notificacao
+    ports:
+      - "8082:8082"
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: db_at_usuario
+    ports:
+      - "5433:5432"
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: db_agendador
+
+networks:
+  default:
+    driver: bridge
+
+# version: "3.8"
+#   Antigamente o Docker Compose tinha versões de sintaxe: 3.8 (a mais usada)
+#   Hoje (Docker Desktop atual): o Docker ignora isso, ele detecta a versão automaticamente
+
+# services: Aqui você está dizendo: “Quero subir vários containers juntos”
+
+#   agendador-tarefas:
+#     build: ../agendador-tarefas
+#       O Docker vai: entrar na pasta ../agendador-tarefas, procurar um Dockerfile, buildar a imagem
+#       o .. significa: “uma pasta acima da onde está o docker-compose”
+
+#     container_name: agendador-tarefas
+#       Nome fixo do container (bom pra comunicação entre serviços).
+
+#     ports:
+#       - "8081:8081"
+#       Mapeamento de porta: host (seu PC) > 8081, container > 8081
+
+#     environment:
+#       - SPRING_DATA_MONGODB_URL=mongodb://mongo:27017/db_agendador
+#       Isso diz: Mongo está no container chamado mongo, Porta padrão 27017, Banco db_agendador
+#       não é localhost, porque: containers se falam pelo nome do serviço
+
+#     depends_on:
+#       - mongo
+#       Garante que: o container mongo sobe antes, não garante que o mongo esteja “pronto”, só iniciado
+
+#   bff-agendador-tarefas:
+#     build: .
+#       Aqui o Docker vai: usar a pasta atual, procurar o Dockerfile do BFF
+
+#     environment:
+#       - USUARIO_URL=http://usuario:8080/usuario
+#       - AGENDADOR_TAREFAS_URL=http://agendador-tarefas:8081/tarefas
+#       - NOTIFICACAO_URL=http://notificacao:8082/email
+#       Dentro do container: usuario > nome do serviço, 8080 > porta interna, /usuario > endpoint
+#       ❌ Nunca usar localhost entre containers
+#       ✔️ usar o nome do serviço
+
+#   usuario:
+#     environment:
+#       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/db_at_usuario
+#       postgres é o nome do container, 5432 porta interna do postgres, banco db_at_usuario
+
+#     depends_on:
+#       - postgres
+#       Usuário depende do banco
+
+#   postgres:
+#     image: postgres:latest
+#     Aqui não builda nada, só: baixa a imagem oficial do Docker Hub
+
+#     ports:
+#       - "5433:5432"
+#       Importante: no seu PC: 5433, no container: 5432
+
+#   mongo:
+#     image: mongo:latest
+#     Imagem oficial do MongoDB.
+
+# networks:
+#     default:
+#       driver: bridge
+#       Isso cria uma rede privada onde: todos os containers se enxergam, comunicação por nome (usuario, mongo, etc)
+#       o Docker cria automaticamente.
+
+#   POSTGRES_USER	SPRING_DATASOURCE_USERNAME
+#   POSTGRES_PASSWORD	SPRING_DATASOURCE_PASSWORD
+#   Se um lado for diferente > conexão falha
+
+# build: → de onde vem o código
+# image: → imagem pronta
+# ports: → PC ↔ container
+# environment: → configs do Spring
+# depends_on: → ordem de subida

@@ -84,6 +84,17 @@
 	</dependencyManagement>
 
 	<build>
+
+		<!-- Configuração explícita dos resources para evitar filtering.
+		O filtering pode causar problemas de encoding (ex: MalformedInputException)
+		em arquivos como application.properties no Windows. -->
+		<resources><!-- resources > arquivos não-Java -->
+			<resource>
+				<directory>src/main/resources</directory><!-- directory > onde estão -->
+				<filtering>false</filtering><!-- filtering=false > copia sem interpretar -->
+			</resource>
+		</resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -98,6 +109,7 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
