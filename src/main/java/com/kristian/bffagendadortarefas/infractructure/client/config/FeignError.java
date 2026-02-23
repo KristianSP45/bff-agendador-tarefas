@@ -1,10 +1,7 @@
 package com.kristian.bffagendadortarefas.infractructure.client.config;
 
-import com.kristian.bffagendadortarefas.infractructure.exceptions.BusinessException;
-import com.kristian.bffagendadortarefas.infractructure.exceptions.ConflictException;
+import com.kristian.bffagendadortarefas.infractructure.exceptions.*;
 import com.kristian.bffagendadortarefas.infractructure.exceptions.IllegalArgumentException;
-import com.kristian.bffagendadortarefas.infractructure.exceptions.ResourceNotFoundException;
-import com.kristian.bffagendadortarefas.infractructure.exceptions.UnauthorizedException;
 import feign.Response;//Response > resposta HTTP real
 import feign.codec.ErrorDecoder;//ErrorDecoder > interface que permite tratar erros do Feign
 
@@ -14,6 +11,8 @@ import java.util.Objects;
 
 public class FeignError implements ErrorDecoder {//implements ErrorDecoder = “Sempre que o Feign receber um erro HTTP, passa por mim”
 //tratamento + tradução + padronização
+    private static final String ERROR_PREFIX = "Erro: ";
+
     @Override
     public Exception decode(String s, Response response) {
         //String s > nome do método Feign que falhou (não usado aqui, mas útil pra log)
@@ -23,15 +22,15 @@ public class FeignError implements ErrorDecoder {//implements ErrorDecoder = “
 
         switch (response.status()){//Decide qual exceção lançar com base no status.
             case 409:
-                return new ConflictException("Erro: "+mensagemErro);
+                return new ConflictException(ERROR_PREFIX+mensagemErro);
             case 403:
-                return new ResourceNotFoundException("Erro: "+mensagemErro);
+                return new ResourceNotFoundException(ERROR_PREFIX+mensagemErro);
             case 401:
-                return new UnauthorizedException("Erro: "+mensagemErro);
+                return new UnauthorizedException(ERROR_PREFIX+mensagemErro);
             case 400:
-                return new IllegalArgumentException("Erro: "+mensagemErro);
+                return new IllegalArgumentException(ERROR_PREFIX+mensagemErro);
             default:
-                return new BusinessException("Erro: "+mensagemErro);
+                return new BusinessException(ERROR_PREFIX+mensagemErro);
         }
     }
 
@@ -46,7 +45,7 @@ public class FeignError implements ErrorDecoder {//implements ErrorDecoder = “
             //.readAllBytes() > Lê tudo que veio nessa torneira.
             //StandardCharsets.UTF_8 > diz ao Java COMO interpretar os bytes.
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ErroException(e.getMessage());
         }
     }
 }

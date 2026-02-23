@@ -11,6 +11,10 @@ public class SecurityConfig {
     //Essa classe existe apenas para o Swagger/OpenAPI saber que a API usa Bearer JWT e, assim, mostrar o botão de autenticação.
 
     public static final String SECURITY_SCHEME = "bearerAuth";//Você está dizendo ao Swagger: “Esse endpoint exige autenticação bearerAuth”
+
+    private SecurityConfig() {//Ele comunica:"Essa classe não foi feita para ser instanciada."
+        throw new UnsupportedOperationException("Classe utilitária - não deve ser instanciada");
+    }
 }
 //name = SecurityConfig.SECURITY_SCHEME == Depois você usa esse nome aqui
 //@SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
