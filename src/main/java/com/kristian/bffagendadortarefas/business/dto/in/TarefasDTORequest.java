@@ -1,7 +1,6 @@
 package com.kristian.bffagendadortarefas.business.dto.in;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kristian.bffagendadortarefas.business.enums.StatusNotificacaoEnum;
 import lombok.*;
 
 import java.time.LocalDateTime;

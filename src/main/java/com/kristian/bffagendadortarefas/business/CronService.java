@@ -17,8 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j//é tipo um out.println(), mas mais profissional e usando com log.info("");
-//private static final Logger log = LoggerFactory.getLogger(CronService.class);
+@Slf4j
 public class CronService {
 
     private final TarefasService tarefasService;
@@ -70,6 +69,8 @@ public class CronService {
         // definidas no application.yml.
     }
 }
+//@Slf4j é tipo um out.println(), mas é mais profissional e usando com log.info("");
+//private static final Logger log = LoggerFactory.getLogger(CronService.class); = lombok faz automaticamente
 // @Value("${usuario.email}") e @Value("${usuario.senha}")
 // Aqui não é usuário final.
 // É um usuário técnico do sistema, tipo: cron@system.com
