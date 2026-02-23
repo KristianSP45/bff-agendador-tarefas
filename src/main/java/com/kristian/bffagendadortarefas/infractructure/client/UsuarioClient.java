@@ -9,7 +9,6 @@ import com.kristian.bffagendadortarefas.business.dto.out.TelefoneDTOResponse;
 import com.kristian.bffagendadortarefas.business.dto.out.UsuarioDTOResponse;
 import com.kristian.bffagendadortarefas.business.dto.out.ViaCepDTOResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "usuario", url = "${usuario.url}")

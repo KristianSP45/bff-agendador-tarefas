@@ -3,8 +3,6 @@ package com.kristian.bffagendadortarefas.infractructure.client.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.swing.*;
-
 @Configuration//“Essa classe define beans de configuração da aplicação”
 public class FeignConfig {
 
